@@ -20,5 +20,13 @@ router.post('/login', async (req, res) => {
   const token = jwt.sign({ _id: user._id }, 'carapplication');
   res.json({ token });
 });
-
+router.post('/logout', async (req, res) => { 
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return res.status(400).send('Invalid credentials');
+  }
+  const token = jwt.sign({ _id: user._id }, 'carapplication');
+  res.json({ token });
+});
 module.exports = router;
